@@ -20,8 +20,7 @@ export class PolicyholderController {
   public getPolicyholderTop = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { code } = req.params;
-      const foundPolicyholderTop: PolicyholdersWithIntroducee = await this.policyholder.findIntroducerByCodeWithIntroducee(code);
-
+      const foundPolicyholderTop: PolicyholdersWithIntroducee = await this.policyholder.findTopByCodeWithIntroducee(code);
       res.status(200).json(foundPolicyholderTop);
     } catch (error) {
       next(error);
