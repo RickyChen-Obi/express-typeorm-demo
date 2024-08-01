@@ -5,7 +5,10 @@ import { Inject, Service } from 'typedi';
 
 @Service()
 export class PolicyholderController {
-  constructor(@Inject(() => PolicyholdersService) private policyholder: PolicyholdersService) {}
+  constructor(
+    @Inject(() => PolicyholdersService)
+    private policyholder: PolicyholdersService,
+  ) {}
   public getPolicyholder = async (req: GetPolicyholdersRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { code } = req.query;
@@ -27,9 +30,3 @@ export class PolicyholderController {
     }
   };
 }
-
-// A
-// B  C
-// DE  FG
-// HIJK  LMNO
-// PQ RS
