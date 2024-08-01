@@ -3,19 +3,33 @@ import { HttpException } from '@/exceptions/HttpException';
 import { Policyholder, PolicyholderNodes, PolicyholdersWithIntroducee } from '@/interfaces/policyholders.interface';
 
 import { Service } from 'typedi';
-import { EntityRepository, Repository, getManager } from 'typeorm';
+import { Repository, TreeRepository } from 'typeorm';
+
+import { InjectRepository } from 'typeorm-typedi-extensions';
 
 @Service()
-@EntityRepository()
-export class PolicyholdersService extends Repository<PolicyholdersEntity> {
+export class PolicyholdersService {
+  constructor(
+    @InjectRepository(PolicyholdersEntity)
+    private readonly treeRepository: TreeRepository<PolicyholdersEntity>,
+    @InjectRepository(PolicyholdersEntity)
+    private readonly policyholdersRepository: Repository<PolicyholdersEntity>,
+  ) {}
+
+  public async findTopByCodeWithIntroducee(code: string, maxDepth = 4) {
+    const policyholder = await this.findPolicyholderByCode(code);
+
+    const { introducer_code: top_code } = policyholder;
+    if (!top_code) throw new HttpException(404, 'User does not have a introducer.');
+    const result = await this.findPolicyholderWithIntroducee(top_code, maxDepth);
+    return result;
+  }
+
   public async findPolicyholderWithIntroducee(code: string, maxDepth = 4): Promise<PolicyholdersWithIntroducee> {
     const policyholder = await this.findPolicyholderByCode(code);
-    if (!policyholder) throw new HttpException(404, 'User does not exist.');
 
-    const manager = getManager();
-    const treeRepository = manager.getTreeRepository(PolicyholdersEntity);
-    const { children } = await treeRepository.findDescendantsTree(policyholder, { depth: maxDepth });
-
+    const list = await this.treeRepository.findDescendantsTree(policyholder, { depth: maxDepth });
+    const { children } = list;
     const flattenTree = this.flattenPolicyholdersTree(children, [])
       .sort((a, b) => {
         return a.registration_date.getTime() - b.registration_date.getTime();
@@ -30,22 +44,9 @@ export class PolicyholdersService extends Repository<PolicyholdersEntity> {
     };
   }
 
-  public async findIntroducerByCodeWithIntroducee(code: string, maxDepth = 4) {
-    const policyholder = await this.findPolicyholderByCode(code);
-    if (!policyholder) throw new HttpException(404, 'User does not exist.');
-
-    const { introducer_code: top_code } = policyholder;
-    if (!top_code) throw new HttpException(404, 'User does not have a introducer.');
-
-    const result = await this.findPolicyholderWithIntroducee(top_code, maxDepth);
-    return result;
-  }
-
   public async findPolicyholderByCode(code: string): Promise<PolicyholdersEntity> {
-    const policyholder = await PolicyholdersEntity.findOne({ where: { code } });
-
+    const policyholder = await this.policyholdersRepository.findOne({ where: { code } });
     if (!policyholder) throw new HttpException(404, 'User does not exist.');
-
     return policyholder;
   }
 
