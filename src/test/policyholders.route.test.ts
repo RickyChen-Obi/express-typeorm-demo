@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { PolicyholdersService } from '@/services/policyholders.service';
 import { PolicyholdersEntity } from '@/entities/policyholders.entity';
-import { Repository, TreeRepository, getConnection } from 'typeorm';
-import { rootPolicyholder, rootPolicyholderDescendentTree, rootPolicyholderSeparateTree } from './mockdata/policyholders.mockdata';
+import { TreeRepository } from 'typeorm';
+import { rootPolicyholder, rootPolicyholderDescendentTree } from './mockdata/policyholders.mockdata';
 import { HttpException } from '@/exceptions/HttpException';
 import Container from 'typedi';
 import { PolicyholderController } from '@/controllers/policyholder.controller';
@@ -10,10 +10,6 @@ import request from 'supertest';
 import { App } from '@/app';
 import { PolicyholderRoute } from '@/routes/policyholder.route';
 
-// afterAll(async () => {
-//   await getConnection().close();
-// });
-// mockRepository.ts
 const mockService = {
   findPolicyholderWithIntroducee: jest.fn().mockImplementation(code => {
     switch (code) {
@@ -42,9 +38,6 @@ export const mockTreeRepositoryFactory = {
 } as unknown as TreeRepository<PolicyholdersEntity>;
 
 describe('PolicyholderService', () => {
-  // let service: PolicyholdersService;
-  // let connection: Connection;
-
   beforeAll(async () => {
     const controller = new PolicyholderController(mockService);
     Container.set(PolicyholderController, controller);

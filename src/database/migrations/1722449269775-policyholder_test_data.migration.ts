@@ -5,7 +5,6 @@ export class policyholderTestData1722449269775 implements MigrationInterface {
   public async up(): Promise<void> {
     const policyholdersRepository = getRepository(PolicyholdersEntity);
 
-    // Helper function to find or create a policyholder by name
     async function findOrCreatePolicyholder(name: string): Promise<PolicyholdersEntity> {
       let policyholder = await policyholdersRepository.findOne({ where: { name } });
       if (!policyholder) {
@@ -24,7 +23,6 @@ export class policyholderTestData1722449269775 implements MigrationInterface {
       return policyholder;
     }
 
-    // Find or create policyholders A, B, and C
     const policyholderA = await findOrCreateA();
     const policyholderB = await findOrCreatePolicyholder('B');
     const policyholderC = await findOrCreatePolicyholder('C');
@@ -113,7 +111,6 @@ export class policyholderTestData1722449269775 implements MigrationInterface {
     const policyholdersRepository = getRepository(PolicyholdersEntity);
 
     const policyholderNames = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S'];
-    // Remove policyholders A to S
     for (const name of policyholderNames) {
       await policyholdersRepository.delete({ name });
     }

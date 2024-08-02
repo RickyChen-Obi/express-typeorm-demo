@@ -5,7 +5,6 @@ import { Repository, TreeRepository } from 'typeorm';
 import { rootPolicyholder, rootPolicyholderDescendentTree, rootPolicyholderSeparateTree } from './mockdata/policyholders.mockdata';
 import { HttpException } from '@/exceptions/HttpException';
 
-// mockRepository.ts
 const mockRepository = {
   findOne: jest.fn().mockImplementation(({ where: { code } }) => {
     switch (code) {
@@ -25,18 +24,12 @@ export const mockTreeRepositoryFactory = {
 
 describe('PolicyholderService', () => {
   let service: PolicyholdersService;
-  // let connection: Connection;
 
   beforeAll(async () => {
-    // connection = await dbConnection();
     service = new PolicyholdersService(mockTreeRepositoryFactory, mockRepository);
-  });
-  afterAll(async () => {
-    // await connection.close();
   });
 
   it('should find an policyholder', async () => {
-    // (mockRepository.findOne as jest.Mock).mockReturnValueOnce(rootPolicyholder);
     const result = await service.findPolicyholderByCode('19b00130-99e7-439d-96fd-3c4eee11660a');
     expect(result).toEqual(rootPolicyholder);
   });
