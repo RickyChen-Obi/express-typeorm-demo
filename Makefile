@@ -15,6 +15,9 @@ help:
 	| sed -e 's/\[32m #-- /[33m/'
 
 #-- Docker
+init: ## To initilaize, on the first run
+	docker-compose up --build -d
+
 up: ## Up the container images
 	docker-compose up -d
 
