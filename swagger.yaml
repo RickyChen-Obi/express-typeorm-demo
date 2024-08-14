@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Clinico demo API
-  description: Demo API for Clinico interview assessment
+  title: Express-typeorm-demo
+  description: Demo API
   version: 1.0.0
 paths:
 # [GET] policyholders

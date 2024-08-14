@@ -1,10 +1,11 @@
-# Clinico-interview
+# Express-typeorm-demo
 
-Clinico interview assessment, build with typescript, typeorm, postgres and express.
+Express-typeorm-demo, build with typescript, typeorm, postgres and express.
+To show introducer and introducee tree, in level order traversal, order by creation date, level
 
 ## Prerequisite
 
-- nodejs: "^16.18.x"
+- nodejs: "^20.xx.x"
 - docker
 - docker compose
 - .env.development.local and .env.production.local (set according to the env example)
@@ -43,7 +44,7 @@ Clinico interview assessment, build with typescript, typeorm, postgres and expre
 - swagger ui route
 
    ```md
-   http{s}://{host}/api-docs/
+   {host}/api-docs/
    ```
 
 ### To deploy
